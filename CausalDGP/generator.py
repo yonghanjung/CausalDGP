@@ -5,6 +5,7 @@ import pandas as pd
 from scipy.linalg import toeplitz
 from scipy.special import expit, softmax
 from scm import StructuralCausalModel  # Ensure generateSCM.py is in the same directory
+import graph 
 
 def inv_logit(vec):
 	return 1/(1+np.exp(-vec))
@@ -834,6 +835,7 @@ def ConeCloud_15_SCM(seednum=None, **kwargs):
 	- Observable variables are categorical with a domain size of 4.
 	- Unmeasured confounders (U_*) represent the bidirected edges.
 	"""
+	num_samples = kwargs.get('num_sample')
 	if seednum is not None:
 		random.seed(int(seednum))
 		np.random.seed(seednum)
@@ -845,6 +847,7 @@ def ConeCloud_15_SCM(seednum=None, **kwargs):
 		probabilities = softmax(logits, axis=1)
 		return np.array([np.random.choice(4, p=p_row) for p_row in probabilities])
 
+	
 	# --- Structural Equations ---
 	# Central node
 	def equation_V5(noise, **kwargs):
@@ -1306,5 +1309,5 @@ def Plan_ID_SCM(seednum = None):
 	return [scm, X, Y]
 
 if __name__ == "__main__":
-	[scm, X, Y] = ConeCloud_15_SCM(num_sample = 10000, d= 100)
+	[scm, X, Y] = BD_SCM(seednum=123, d=10)
 	sample_data = scm.generate_samples(100)
