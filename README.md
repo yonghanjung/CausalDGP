@@ -58,3 +58,6 @@ sample_data = scm.generate_samples(num_samples=1000)
 
 # 4. Display the first few rows of your new dataset
 print(sample_data.head())
+```
+
+### Benchmark
