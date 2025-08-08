@@ -1,6 +1,6 @@
-# CausalDGP: A Python Engine for Structural Causal Models
+# A Benchmark for Estimating Identifiable Causal Effects
 
-**A powerful and flexible Python library for creating, manipulating, and generating data from Structural Causal Models (SCMs).**
+**A curated collection of data generating processes from the causal inference literature, designed for benchmarking and evaluating causal effect estimation methods.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -8,31 +8,22 @@
 
 ## 📖 Overview
 
-**CausalDGP** provides a robust framework for causal inference research and experimentation. At its core, the library offers a `StructuralCausalModel` class and a suite of graph utility functions designed to handle complex causal structures.
+This repository provides a standardized, easy-to-use collection of synthetic and semi-synthetic data generating processes (DGPs) for the task of estimating any identifiable causal effects from observational data and a causal graph. The goal is to offer a benchmark for evaluating the performance of causal estimators under various identification scenarios, such as
 
-While the engine is general-purpose, this package also serves as a benchmark, providing a standardized collection of data generating processes (DGPs) from the causal inference literature. It's designed to help researchers evaluate causal estimators under various challenging scenarios, such as:
+* Back-door adjustment
+* Sequential time-series data 
+* Front-door adjustment 
+* Tian's adjustment 
+* Napkin graph 
+* Other complicated graphs
 
-* Back-door and front-door adjustment
-* Unobserved confounding and "napkin" graphs
-* Longitudinal and sequential time-series data
-* Complex graphical structures requiring advanced identification strategies
-
----
-
-## ⚙️ The Core Engine
-
-The power of `CausalDGP` comes from two main components:
-
-* **`scm.py`**: Provides the `StructuralCausalModel` class, which allows you to define complex data generating processes by specifying variables, their causal parents, and their functional relationships.
-* **`graph.py`**: A suite of utility functions for graph manipulation and analysis, including topological sorting, finding ancestors, d-separation checks, and interactive graph visualization.
-
-For detailed API documentation, please see our `docs/` folder (coming soon).
+Each DGP is implemented as a **StructuralCausalModel (SCM)**, allowing for flexible data generation and intervention.
 
 ---
 
-## 🚀 Quick Start: The Benchmark Application
+## 💻 Data Generation Script
 
-The easiest way to see `CausalDGP` in action is through the included benchmark generators (`generator.py`). These pre-built SCMs from the literature demonstrate the capabilities of the engine.
+We provide the Python script (`generator.py`) used to generate all datasets from their underlying SCMs. This allows researchers to generate new samples with different random seeds, sizes, or parameter settings.
 
 ### Setup
 
@@ -40,21 +31,24 @@ The easiest way to see `CausalDGP` in action is through the included benchmark g
     ```bash
     pip install networkx scipy matplotlib numpy pandas pyvis
     ```
-2.  Install `CausalDGP` as an editable package to ensure all imports work correctly.
+2.  The generation script depends on a custom `StructuralCausalModel` class. Ensure the `scm.py` file is in the same directory as `generator.py`.
 
-### Example: Generating Data
+### How to Generate Data
 
-You can import any SCM from the `generator` module and use it to create a dataset. Here’s how to generate 1,000 samples from the **Kang & Schafer (2007)** simulation:
+You can easily generate data from any SCM in the collection. Each generator function returns the SCM object and lists of the treatment and outcome variable names.
+
+Here is an example of how to generate 1,000 samples from the **Kang & Schafer (2007)** simulation:
 
 ```python
-# 1. Import a pre-built SCM generator from the CausalDGP package
+# 1. Import the generator function and the SCM class
 from CausalDGP.generator import Kang_Schafer
+from CausalDGP.scm import StructuralCausalModel
 
-# 2. Get the SCM object, treatment, and outcome variable names
+# 2. Get the SCM object and variable names
 scm, treatments, outcomes = Kang_Schafer(seednum=42)
 
-# 3. Use the SCM object to generate a pandas DataFrame
+# 3. Generate a pandas DataFrame with 1,000 samples
 sample_data = scm.generate_samples(num_samples=1000)
 
-# 4. Display the first few rows of your new dataset
+# Display the first few rows
 print(sample_data.head())
